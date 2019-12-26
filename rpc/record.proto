@@ -1,23 +1,24 @@
 syntax = "proto3";
 
 package rpc;
+import "google/api/annotations.proto";
 
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
-    info: {
-      title: "grpc-poc";
-      version: "1.0";
-      contact: {
-        name: "Daniel Augusto De Melo Moreira";
-        url: "https://github.com/Daniel-Moreira/grpc-poc";
-        email: "dammkami@gmail.com";
-        linkedin: "https://www.linkedin.com/in/daniel-augusto-de-melo-moreira-b85265183/";
-      };
-    };
-    schemes: HTTP;
-    schemes: HTTPS;
-    consumes: "application/json";
-    produces: "application/json";
-  };
+// option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+//     info: {
+//       title: "grpc-poc";
+//       version: "1.0";
+//       contact: {
+//         name: "Daniel Augusto De Melo Moreira";
+//         url: "https://github.com/Daniel-Moreira/grpc-poc";
+//         email: "dammkami@gmail.com";
+//         linkedin: "https://www.linkedin.com/in/daniel-augusto-de-melo-moreira-b85265183/";
+//       };
+//     };
+//     schemes: HTTP;
+//     schemes: HTTPS;
+//     consumes: "application/json";
+//     produces: "application/json";
+// };
 
 service RecordService {
     rpc GetRecord(RecordID) returns (Response) {
@@ -26,17 +27,21 @@ service RecordService {
     
     rpc BackupRecord(Record) returns (Response) {
         option (google.api.http) = {
-            post = "/api/records.backup"
-            body = "*"
-        }
+            post: "/api/records.backup"
+            body: "*"
+        };
     }
 }
 
 message Response {
-    required bool ok = 1;
+    bool ok = 1;
 
-    optional Record record = 2;
-    optional Error error = 3;
+    Record record = 2;
+    Error error = 3;
+}
+
+message Error {
+    string message = 1; 
 }
 
 message RecordID {
