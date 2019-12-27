@@ -1,4 +1,4 @@
-package record
+package audio
 
 import (
 	"errors"
@@ -6,8 +6,17 @@ import (
 	"grpc-poc/controller/vendors/aws/s3"
 )
 
-func GetRecord(id int32) *rpc.Record {
+func GetRecord(id int32) (bool, error) {
+  bucket := "recordings-backup"
+  file := fmt.Sprintf("teste/%d.mp3", id)
 
+  file, err := s3.Download(bucket, file)
+
+  if err != nil {
+    false, err
+  }
+
+return true, nil
 }
 
 func BackupRecord(record *rpc.Record) (bool, error) {
@@ -15,7 +24,7 @@ func BackupRecord(record *rpc.Record) (bool, error) {
 		return false, errors.New("audio not finished")
 	}
 
-	toBucket := "recordings/backup"
+	toBucket := "recordings-backup"
 	toPath := fmt.Sprintf("teste/%d.mp3", record.GetId())
 	fromUri := fmt.Sprintf("%s.mp3", record.GetUrl())
 	acl := "public-read"
@@ -23,7 +32,7 @@ func BackupRecord(record *rpc.Record) (bool, error) {
 
 	err := s3.Stream(fromUri, toBucket, toPath, acl, contentType)
 
-  if err {
+  if err != nil {
     false, err
   }
 
