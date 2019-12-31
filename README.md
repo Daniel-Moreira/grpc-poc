@@ -15,8 +15,32 @@ grpc-gateway: go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-g
 
 dep ensure -v
 
+rpc-server:
+```
 protoc -I/usr/local/include -I. \
   -I$GOPATH/src \
   -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
   --go_out=plugins=grpc:. \
   ./rpc/record.proto
+```
+
+reverse-proxy:
+```
+protoc -I/usr/local/include -I. \
+  -I$GOPATH/src \
+  -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  --grpc-gateway_out=logtostderr=true:. \
+  ./rpc/record.proto
+```
+
+swagger:
+```
+protoc -I/usr/local/include -I. \
+  -I$GOPATH/src \
+  -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway \
+  --swagger_out=logtostderr=true:. \
+  ./rpc/record.proto
+```
+
+exec: `go run controller/api.go`
