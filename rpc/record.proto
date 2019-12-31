@@ -2,63 +2,64 @@ syntax = "proto3";
 
 package rpc;
 import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
-// option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
-//     info: {
-//       title: "grpc-poc";
-//       version: "1.0";
-//       contact: {
-//         name: "Daniel Augusto De Melo Moreira";
-//         url: "https://github.com/Daniel-Moreira/grpc-poc";
-//         email: "dammkami@gmail.com";
-//         linkedin: "https://www.linkedin.com/in/daniel-augusto-de-melo-moreira-b85265183/";
-//       };
-//     };
-//     schemes: HTTP;
-//     schemes: HTTPS;
-//     consumes: "application/json";
-//     produces: "application/json";
-// };
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "grpc-poc";
+    version: "1.0";
+    contact: {
+      name: "Daniel Augusto De Melo Moreira";
+      url: "https://github.com/Daniel-Moreira/grpc-poc";
+      email: "dammkami@gmail.com";
+    };
+  };
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+};
 
 service RecordService {
-    rpc GetRecord(RecordID) returns (Response) {
-        option (google.api.http).get = "/api/records/{id}";
-    }
-    
-    rpc BackupRecord(Record) returns (Response) {
-        option (google.api.http) = {
-            post: "/api/records.backup"
-            body: "*"
-        };
-    }
+  rpc GetRecord(RecordID) returns (Response) {
+    option (google.api.http).get = "/api/records/{id}";
+  }
+  
+  rpc BackupRecord(Record) returns (Response) {
+    option (google.api.http) = {
+      post: "/api/records.backup"
+      body: "*"
+    };
+  }
 }
 
 message Response {
-    bool ok = 1;
+  bool ok = 1;
 
-    Record record = 2;
-    Error error = 3;
+  Record record = 2;
+
+  Error error = 3;
 }
 
 message Error {
-    string message = 1; 
+  string message = 1; 
 }
 
 message RecordID {
-    int32 id = 1;
+  int32 id = 1;
 }
 
 message Record {
-    RecordID id = 1;
-    string duration = 2;
+  int32 id = 1;
+  string duration = 2;
 
-    enum RecordStatus {
-        inprogress = 0;
-        completed = 1;
-        absent = 2;
-        failed = 3;
-    }
+  enum RecordStatus {
+    inprogress = 0;
+    completed = 1;
+    absent = 2;
+    failed = 3;
+  }
 
-    RecordStatus status = 3;
-    string url = 4;
+  RecordStatus status = 3;
+  string url = 4;
 }
