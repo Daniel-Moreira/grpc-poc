@@ -3,7 +3,6 @@ package s3
 import (
 	"errors"
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -23,12 +22,13 @@ func client() *s3.S3 {
 	return s3Client
 }
 
-func Download(bucket string, file string) (*io.Writer, error) {
+// io.Writer
+func Download(bucket string, file string) (*int64, error) {
 	downloader := s3manager.NewDownloaderWithClient(client())
 
 	f, err := os.Create("audio_temp.mp3")
 	if err != nil {
-		return nil, errors.New(fmt.Errorf("failed to create file %s, %v", "audio_temp.mp3", err))
+		return nil, errors.New(fmt.Sprintf("failed to create file %s, %v", "audio_temp.mp3", err))
 	}
 
 	n, err := downloader.Download(f, &s3.GetObjectInput{
@@ -37,10 +37,11 @@ func Download(bucket string, file string) (*io.Writer, error) {
 	})
 
 	if err != nil {
-		return nil, errors.New(fmt.Errorf("failed to download file, %v", err))
+		return nil, errors.New(fmt.Sprintf("failed to download file, %v", err))
 	}
 
-	return n, nil
+	fmt.Print(n)
+	return &n, nil
 }
 
 func Stream(from string, bucket string, to string, acl string, contentType string) error {
@@ -60,7 +61,7 @@ func Stream(from string, bucket string, to string, acl string, contentType strin
 		ContentEncoding: aws.String(contentType),
 	}
 
-	result, err := uploader.Upload(upParams)
+	_, err = uploader.Upload(upParams)
 
 	return err
 }

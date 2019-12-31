@@ -2,21 +2,22 @@ package audio
 
 import (
 	"errors"
-	"grpc-poc/rpc"
+	"fmt"
 	"grpc-poc/controller/vendors/aws/s3"
+	"grpc-poc/rpc"
 )
 
 func GetRecord(id int32) (bool, error) {
-  bucket := "recordings-backup"
-  file := fmt.Sprintf("teste/%d.mp3", id)
+	bucket := "recordings-backup"
+	filePath := fmt.Sprintf("teste/%d.mp3", id)
 
-  file, err := s3.Download(bucket, file)
+	_, err := s3.Download(bucket, filePath)
 
-  if err != nil {
-    false, err
-  }
+	if err != nil {
+		return false, err
+	}
 
-return true, nil
+	return true, nil
 }
 
 func BackupRecord(record *rpc.Record) (bool, error) {
@@ -32,9 +33,9 @@ func BackupRecord(record *rpc.Record) (bool, error) {
 
 	err := s3.Stream(fromUri, toBucket, toPath, acl, contentType)
 
-  if err != nil {
-    false, err
-  }
+	if err != nil {
+		return false, err
+	}
 
 	return true, nil
 }
