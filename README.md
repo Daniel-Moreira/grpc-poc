@@ -20,6 +20,7 @@ rpc-server:
 protoc -I/usr/local/include -I. \
   -I$GOPATH/src \
   -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway \
   --go_out=plugins=grpc:. \
   ./rpc/record.proto
 ```
@@ -29,6 +30,7 @@ reverse-proxy:
 protoc -I/usr/local/include -I. \
   -I$GOPATH/src \
   -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+  -I$GOPATH/src/github.com/grpc-ecosystem/grpc-gateway \
   --grpc-gateway_out=logtostderr=true:. \
   ./rpc/record.proto
 ```
