@@ -46,11 +46,11 @@ message Error {
 }
 
 message RecordID {
-  int32 id = 1;
+  string id = 1;
 }
 
 message Record {
-  int32 id = 1;
+  string id = 1;
   string duration = 2;
 
   enum RecordStatus {
