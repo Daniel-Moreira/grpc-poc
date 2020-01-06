@@ -7,7 +7,7 @@ import (
 	"grpc-poc/rpc"
 )
 
-func GetRecord(id int32) (bool, error) {
+func GetRecord(id string) (bool, error) {
 	bucket := "recordings-backup"
 	filePath := fmt.Sprintf("teste/%d.mp3", id)
 
