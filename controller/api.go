@@ -38,6 +38,12 @@ func main() {
 	run()
 }
 
+func serveSwagger(mux *http.ServeMux) {
+	fileServer := http.FileServer(http.Dir("./third_party/swagger-ui"))
+	prefix := "/swagger-ui/"
+	mux.Handle(prefix, http.StripPrefix(prefix, fileServer))
+}
+
 func run() error {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -55,6 +61,7 @@ func run() error {
 	curdir, _ := os.Getwd()
 	fmt.Println("cur dir", curdir)
 	mux.Handle("/api/", gw)
+	serveSwagger(mux)
 
 	return http.ListenAndServe(httpPort, mux)
 }
